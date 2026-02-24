@@ -28,25 +28,51 @@ cantidad      = 5
 
 # --- Tu código aquí ---
 
-precio_final = 0   # reemplaza con tu lógica
-
 # TODO 1: Determina el precio base según zona
-#         (campo, gradería, preferencia, vip o zona inválida)
+if zona == "campo":
+    precio_base = 200
+elif zona == "gradería":
+    precio_base = 350
+elif zona == "preferencia":
+    precio_base = 600
+elif zona == "vip":
+    precio_base = 1200
+else:
+    precio_base = 0
 
 # TODO 2: Calcula el porcentaje de descuento más alto que aplica
+descuento = 0
+motivo = "ninguno"
+if edad < 12 or edad > 64:
+    descuento = 0.50
+    motivo = "edad"
+elif es_ufm and carnet_valido:
+    descuento = 0.25
+    motivo = "estudiante UFM"
+elif dias_anticipacion <= 30:
+    descuento = 0.15
+    motivo = "compra anticipada"
+
 
 # TODO 3: Aplica el descuento al precio base
+precio_por_entrada = precio_base * (1 - descuento)
 
 # TODO 4: Si cantidad > 4, aplica 10% adicional sobre el precio descontado
+descuento_volumen = 0
+if cantidad > 4:
+    descuento_volumen = (precio_por_entrada * cantidad) * 0.10
+
+total = (precio_por_entrada * cantidad) - descuento_volumen
 
 # TODO 5: Imprime el resumen con el formato esperado:
-# === ENTRADA DATAFEST 2026 ===
-# Zona       : vip
-# Precio base: Q1200.00
-# Descuento  : 25.0% (estudiante UFM)
-# Precio/entrada: Q900.00
-# Descuento volumen (5 entradas): -Q450.00
-# TOTAL A PAGAR: Q4050.00
+
+print("=== ENTRADA DATAFEST 2026 ===")
+print(f"Zona:{zona}")
+print(f"Precio base: Q{precio_base:.2f}")
+print(f"Descuento: {descuento*100}% ({motivo})")
+print(f"Precio/entrada: Q{precio_por_entrada:.2f}")
+print(f"Descuento volumen ({cantidad} entradas): -Q{descuento_volumen:.2f}")
+print(f"TOTAL A PAGAR: Q{total:.2f}")
 
 
 # ============================================================
@@ -75,9 +101,22 @@ casos_acceso = [
 for i, caso in enumerate(casos_acceso, start=1):
     zona_c, edad_c, entrada, pulsera, acompanante, prohibicion = caso
 
-    # TODO: Evalúa las reglas en orden y construye el mensaje
-    # TODO: Imprime "Caso N: [PERMITIDO] ..." o "Caso N: [DENEGADO] ..."
-    pass
+    if not entrada:
+        estado = "denegado"
+        mensaje = "Sin entrada valida"
+    elif (zona_c == "vip" or zona_c == "backstage") and not pulsera:
+        estado = "denegado"
+        mensaje = "zona vip requiere pulsera especial"
+    elif edad_c < 18 and not acompanante:
+        estado = "denegado"
+        mensaje = "menor de edad requiere acompañante"
+    elif prohibicion: 
+        estado = "denegado"
+        mensake = "Acceso restringido por seguridad"
+    else:
+        estado = "permitido"
+        mensaje = f"Bienvenido/a a zona: {zona_c}"
+    print(f"Caso {i}: [{estado}] {mensaje}")
 
 # Salida esperada:
 # Caso 1: [DENEGADO] Sin entrada válida
