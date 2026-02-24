@@ -56,28 +56,30 @@ while opcion != "5":
     if opcion == "1":
     # ----------------------------------------------------------
         print("\n=== CARTEL DATAFEST 2026 ===")
-        # TODO: Usa enumerate() para mostrar todos los artistas del cartel
-        # Formato: "[N] Nombre (Género) — Turno: X"
-        pass
+        for i, (nombre, genero, turno) in enumerate(cartel, start=1):
+            print(f"[{i}] {nombre} ({genero}) — Turno: {turno}")
 
     # ----------------------------------------------------------
     elif opcion == "2":
     # ----------------------------------------------------------
-        # TODO: Pide la zona con input()
-        # TODO: Valida con while que la zona exista en zonas_validas;
-        #       si no existe, muestra "Zona no válida" y pide de nuevo.
-        # TODO: Pide la cantidad con input() y convierte a int
-        # TODO: Busca el precio usando zonas_validas.index(zona)
-        # TODO: Calcula el total = precio * cantidad
-        # TODO: Agrega [zona, cantidad, total] a mis_compras
-        # TODO: Muestra la confirmación de compra
+        zona = input("Ingresa la zona (campo/gradería/preferencia/vip): ").strip().lower()
 
-        # Ejemplo de confirmación:
-        # ✓ Compra realizada:
-        #   Zona      : vip
-        #   Cantidad  : 2 entradas
-        #   Total     : Q2400.00
-        pass
+        while zona not in zonas_validas:
+            print("Zona no válida")
+            zona = input("Ingresa la zona (campo/gradería/preferencia/vip): ").strip().lower()
+
+        cantidad = int(input("Ingresa la cantidad de entradas: "))
+
+        idx = zonas_validas.index(zona)
+        precio = precios_base[idx]
+        total = precio * cantidad
+
+        mis_compras.append([zona, cantidad, total])
+
+        print("\n✓ Compra realizada:")
+        print(f"  Zona      : {zona}")
+        print(f"  Cantidad  : {cantidad} entradas")
+        print(f"  Total     : Q{total:.2f}")
 
     # ----------------------------------------------------------
     elif opcion == "3":
@@ -86,9 +88,11 @@ while opcion != "5":
             print("Aún no has comprado entradas.")
         else:
             print("\n=== MIS COMPRAS ===")
-            # TODO: Muestra cada compra con su zona, cantidad y total
-            # Formato: "Compra N | Zona: X | Cantidad: Y | Total: QZ.00"
-            pass
+            for i, compra in enumerate(mis_compras, start=1):
+                zona_c = compra[0]
+                cantidad_c = compra[1]
+                total_c = compra[2]
+                print(f"Compra {i} | Zona: {zona_c} | Cantidad: {cantidad_c} | Total: Q{total_c:.2f}")
 
     # ----------------------------------------------------------
     elif opcion == "4":
@@ -97,24 +101,42 @@ while opcion != "5":
             print("Aún no has realizado ninguna compra.")
         else:
             print("\n=== RESUMEN DE GASTOS ===")
-            # TODO: Calcula el total gastado usando un for (no sum())
+
+            # total gastado (sin sum)
             total_gastado = 0
+            for compra in mis_compras:
+                total_gastado += compra[2]
 
-            # TODO: Calcula el total de entradas compradas (suma las cantidades)
+            # total entradas
             total_entradas = 0
+            for compra in mis_compras:
+                total_entradas += compra[1]
 
-            # TODO: Encuentra la zona con más compras
-            #       (la que aparece más veces en mis_compras)
-            #       Pista: recorre mis_compras y lleva conteo con listas paralelas
-            #       o simplemente encuentra el máximo con un for.
-            zona_favorita = ""
+            # zona favorita (sin diccionarios)
+            zonas_contadas = []
+            conteos = []
 
-            # TODO: Imprime el resumen
-            # === RESUMEN DE GASTOS ===
-            # Total gastado    : Q4800.00
-            # Total entradas   : 6
-            # Zona favorita    : vip
-            pass
+            for compra in mis_compras:
+                z = compra[0]
+                if z in zonas_contadas:
+                    pos = zonas_contadas.index(z)
+                    conteos[pos] += 1
+                else:
+                    zonas_contadas.append(z)
+                    conteos.append(1)
+
+            # encontrar la zona con mayor conteo (con for)
+            zona_favorita = zonas_contadas[0]
+            max_conteo = conteos[0]
+
+            for i in range(len(conteos)):
+                if conteos[i] > max_conteo:
+                    max_conteo = conteos[i]
+                    zona_favorita = zonas_contadas[i]
+
+            print(f"Total gastado    : Q{total_gastado:.2f}")
+            print(f"Total entradas   : {total_entradas}")
+            print(f"Zona favorita    : {zona_favorita}")
 
     # ----------------------------------------------------------
     elif opcion == "5":

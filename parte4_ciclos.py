@@ -26,24 +26,39 @@ afluencia_por_hora = [
 ]
 
 # --- Tu código aquí ---
-
 print("=== AFLUENCIA POR HORA ===")
-
-# TODO: Usa for con enumerate para recorrer afluencia_por_hora
-# TODO: Muestra solo las horas con afluencia > 0
-# TODO: Calcula el número de bloques: bloques = afluencia // 30
-# TODO: Construye la barra con "█" * bloques
-# TODO: Agrega [PICO] si afluencia >= 300
-# TODO: Lleva la cuenta del total y encuentra la hora pico (sin max())
 
 total_dia = 0
 hora_pico = 0
 afluencia_pico = 0
 
 for hora, afluencia in enumerate(afluencia_por_hora):
-    pass  # reemplaza este pass con tu lógica
+    if afluencia > 0:
+        bloques = afluencia // 30
+        barra = "█" * bloques
 
-# TODO: Imprime el resumen final
+        linea = f"Hora {hora:02d} | "
+        if bloques > 0:
+            linea += barra + f" {afluencia} asistentes"
+        else:
+            linea += f"{afluencia} asistentes"
+
+        if afluencia >= 300:
+            linea += " [PICO]"
+
+        print(linea)
+
+        total_dia += afluencia
+
+        # hora pico (sin max)
+        if afluencia > afluencia_pico:
+            afluencia_pico = afluencia
+            hora_pico = hora
+
+print()
+print(f"Total del día : {total_dia:,} asistentes")
+print(f"Hora pico     : Hora {hora_pico:02d} con {afluencia_pico} asistentes")
+
 # Salida esperada (fragmento):
 # === AFLUENCIA POR HORA ===
 # Hora 08 | █ 45 asistentes
@@ -86,17 +101,47 @@ precio_vip = 1200
 
 # --- Tu código aquí ---
 
-# TODO: Usa while para pedir y validar la cuota
+precio_vip = 1200
+
 print("=== SIMULADOR DE PAGOS — ENTRADA VIP ===")
 
-cuota = 0  # se sobreescribirá con input()
-# Pistas para la validación:
-#   cuota < 100   → "La cuota mínima es Q100"
-#   cuota > 600   → "La cuota máxima es Q600"
-#   cuota % 50 != 0 → "La cuota debe ser múltiplo de 50"
+# Validación de cuota
+while True:
+    cuota = float(input("Ingresa tu cuota mensual: "))
 
-# TODO: Simula el plan de pagos con while
-# TODO: Lleva la cuenta del número de cuota y el saldo restante
+    if cuota < 100:
+        print("La cuota mínima es Q100")
+    elif cuota > 600:
+        print("La cuota máxima es Q600")
+    elif cuota % 50 != 0:
+        print("La cuota debe ser múltiplo de 50")
+    else:
+        break
+
+print(f"Cuota ingresada válida: Q{cuota:.2f}")
+print()
+print("=== PLAN DE PAGOS ===")
+
+saldo = precio_vip
+num_cuota = 0
+total_pagado = 0
+
+while saldo > 0:
+    num_cuota += 1
+
+    # última cuota no puede cobrar de más
+    pago = cuota
+    if pago > saldo:
+        pago = saldo
+
+    saldo -= pago
+    total_pagado += pago
+
+    print(f"Cuota #{num_cuota} : Q{pago:.2f} | Saldo restante: Q{saldo:.2f}")
+
+print()
+print(f"Total de cuotas : {num_cuota}")
+print(f"Total pagado    : Q{total_pagado:.2f}")
 
 # Salida esperada (si el usuario ingresa 250):
 # Cuota ingresada válida: Q250.00
@@ -141,19 +186,31 @@ artistas = [
 ]
 
 # --- Tu código aquí ---
+generos = []
+conteos = []
 
-generos  = []
-conteos  = []
-
-# TODO: Itera sobre artistas y llena generos/conteos
+# 1) Contar con listas paralelas
 for nombre, genero in artistas:
-    pass  # reemplaza con tu lógica
+    if genero in generos:
+        idx = generos.index(genero)
+        conteos[idx] += 1
+    else:
+        generos.append(genero)
+        conteos.append(1)
 
-# TODO: Ordena generos y conteos de mayor a menor conteo
-#       (ordena las dos listas al mismo tiempo manteniendo correspondencia)
+# 2) Ordenar de mayor a menor (intercambio)
+n = len(conteos)
+for i in range(n):
+    for j in range(i + 1, n):
+        if conteos[j] > conteos[i]:
+            conteos[i], conteos[j] = conteos[j], conteos[i]
+            generos[i], generos[j] = generos[j], generos[i]
 
-# TODO: Imprime el ranking
+# 3) Imprimir ranking
 print("\n=== RANKING DE GÉNEROS DATAFEST 2026 ===")
+for i in range(len(generos)):
+    barras = "█" * conteos[i]
+    print(f"#{i+1}  {generos[i]:<12} {barras:<4} {conteos[i]} artistas")
 
 # Salida esperada:
 # === RANKING DE GÉNEROS DATAFEST 2026 ===

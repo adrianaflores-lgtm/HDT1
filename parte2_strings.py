@@ -28,12 +28,16 @@ registros = [
 # --- Tu código aquí ---
 
 for nombre, zona, numero in registros:
-    # TODO: Extrae las 3 primeras letras de zona en mayúsculas
-    # TODO: Extrae la inicial del nombre (primera palabra)
-    # TODO: Extrae la inicial del apellido (última palabra)
-    # TODO: Formatea el número con zfill(4)
-    # TODO: Construye y muestra la credencial
-    pass
+    zona3 = zona[:3].upper()
+
+    partes = nombre.split()
+    inicial_nombre = partes[0][0].upper()
+    inicial_apellido = partes[-1][0].upper()
+
+    num4 = str(numero).zfill(4)
+
+    credencial = f"FD26-{zona3}-{inicial_nombre}{inicial_apellido}{num4}"
+    print(credencial)
 
 # Salida esperada:
 # FD26-VIP-CM0047
@@ -65,11 +69,36 @@ registros_crudos = [
 for i, registro in enumerate(registros_crudos, start=1):
     print(f"--- Registro {i} ---")
 
-    # TODO: Separa el registro en sus 3 campos usando split(",")
-    # TODO: Aplica .strip() a cada campo
-    # TODO: Procesa y valida nombre, email y edad
-    # TODO: Imprime el resultado con el formato esperado
-    pass
+    partes = registro.split(",")
+    nombre_crudo = partes[0].strip()
+    email_crudo = partes[1].strip()
+    edad_cruda  = partes[2].strip()
+
+    nombre_limpio = nombre_crudo.title()
+
+    email_limpio = email_crudo.lower()
+    tiene_arroba = "@" in email_limpio
+    valido_email = False
+    if tiene_arroba:
+        pos_arroba = email_limpio.find("@")
+        # debe haber un "." después del "@"
+        if "." in email_limpio[pos_arroba+1:]:
+            valido_email = True
+    
+    edad = int(edad_cruda)
+    en_rango = (edad >= 5 and edad <= 100)
+
+    print(f"Nombre : {nombre_limpio}")
+    print(f"Email  : {email_limpio} | Válido: {'Sí' if valido_email else 'No'}")
+
+    if en_rango:
+        print(f"Edad   : {edad} | En rango: Sí")
+    else:
+        print(f"Edad   : {edad} | En rango: No — fuera del rango [5, 100]")
+
+    print()
+
+
 
 # Salida esperada:
 # --- Registro 1 ---
@@ -118,15 +147,53 @@ vocales = "aeiouáéíóúAEIOUÁÉÍÓÚ"
 palabras_positivas = ["increíble", "excelente", "genial", "espectacular", "maravilloso", "fantástico"]
 palabras_negativas = ["malo", "pésimo", "terrible", "aburrido", "decepcionante", "horrible"]
 
+signos = ".,;:¡!¿?\"()"
+
 for i, resena in enumerate(resenas, start=1):
     print(f"--- Reseña {i} ---")
 
-    # TODO: Cuenta las palabras
-    # TODO: Cuenta las vocales (recorre cada carácter)
-    # TODO: Encuentra la palabra más larga
-    # TODO: Determina el sentimiento
-    # TODO: Imprime los resultados con el formato esperado
-    pass
+    # 1) contar palabras
+    palabras = resena.split()
+    total_palabras = len(palabras)
+
+    # 2) contar vocales
+    total_vocales = 0
+    for ch in resena:
+        if ch in vocales:
+            total_vocales += 1
+
+    # 3) palabra más larga (primer empate gana)
+    palabra_larga = ""
+    for p in palabras:
+        p_limpia = p.strip(signos)
+        if len(p_limpia) > len(palabra_larga):
+            palabra_larga = p_limpia
+
+    # 4) sentimiento
+    tiene_pos = False
+    tiene_neg = False
+
+    for p in palabras:
+        w = p.strip(signos).lower()
+        if w in palabras_positivas:
+            tiene_pos = True
+        if w in palabras_negativas:
+            tiene_neg = True
+
+    if tiene_pos and not tiene_neg:
+        sentimiento = "positiva"
+    elif tiene_neg and not tiene_pos:
+        sentimiento = "negativa"
+    elif tiene_pos and tiene_neg:
+        sentimiento = "mixta"
+    else:
+        sentimiento = "neutral"
+
+    print(f"Palabras      : {total_palabras}")
+    print(f"Vocales       : {total_vocales}")
+    print(f"Palabra larga : \"{palabra_larga}\"")
+    print(f"Sentimiento   : {sentimiento}")
+    print()
 
 # Salida esperada:
 # --- Reseña 1 ---

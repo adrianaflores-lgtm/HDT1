@@ -18,22 +18,27 @@ zona_vip = []
 # --- Tu código aquí ---
 
 # Operación 1: Agregar "Óscar" y "Paula" al FINAL de lista_espera
-# TODO
+lista_espera.append("Óscar")
+lista_espera.append("Paula")
 
 # Operación 2: "Diego" cancela — removerlo de lista_espera
-# TODO
+lista_espera.remove("Diego")
 
 # Operación 3: Mover las primeras `capacidad_vip` personas a zona_vip
-#              (elimínalas de lista_espera al moverlas)
-# Pista: puedes usar lista_espera.pop(0) dentro de un while o for
-# TODO
+contador = 0
+while contador < capacidad_vip:
+    persona = lista_espera.pop(0)
+    zona_vip.append(persona)
+    contador += 1
 
-# Operación 4: En zona_vip, añadir " ★" a todo nombre con MÁS DE 5 caracteres
-# Pista: modifica los elementos usando su índice: zona_vip[i] = zona_vip[i] + " ★"
-# TODO
+# Operación 4: Añadir " ★" a nombres con MÁS DE 5 caracteres
+for i in range(len(zona_vip)):
+    if len(zona_vip[i]) > 5:
+        zona_vip[i] = zona_vip[i] + " ★"
 
-# Operación 5: Imprime el estado final
-# TODO
+# Operación 5: Imprimir estado final
+print(f"ZONA VIP ({len(zona_vip)}/{capacidad_vip})  : {zona_vip}")
+print(f"EN ESPERA ({len(lista_espera)})   : {lista_espera}")
 
 # Salida esperada:
 # ZONA VIP (5/5)  : ['Valentina ★', 'Alejandra ★', 'Kim', 'Lu', 'Marcelo ★']
@@ -50,14 +55,25 @@ precios_con_iva = [224.00, 392.00, 672.00, 1344.00, 56.00, 448.00]
 
 # --- Tu código aquí ---
 
-# a) Lista con todos los precios sin IVA (round a 2 decimales)
-precios_sin_iva = []  # TODO: usa un ciclo for para llenar esta lista
+# a) Lista con todos los precios sin IVA
+precios_sin_iva = []
+
+for precio in precios_con_iva:
+    sin_iva = round(precio / 1.12, 2)
+    precios_sin_iva.append(sin_iva)
 
 # b) Solo los precios sin IVA menores a Q400
-precios_accesibles = []  # TODO: usa un ciclo for para llenar esta lista
+precios_accesibles = []
 
-# c) Lista de strings con formato "Q{precio:.2f}" de todos los precios sin IVA
-precios_formateados = []  # TODO: usa un ciclo for para llenar esta lista
+for precio in precios_sin_iva:
+    if precio < 400:
+        precios_accesibles.append(precio)
+
+# c) Lista formateada
+precios_formateados = []
+
+for precio in precios_sin_iva:
+    precios_formateados.append(f"Q{precio:.2f}")
 
 print(f"Sin IVA        : {precios_sin_iva}")
 print(f"Accesibles     : {precios_accesibles}")
